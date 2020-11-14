@@ -30,7 +30,7 @@ def mideEnergiaRAM():
     archivoResultados=nombreArchivo+fechaIncial+horaInicial+"csv"
     print("Bus Voltage: %.3f V" % ina.voltage())
     a = open (archivoResultados,'a')
-    a.write("N° medida,Fecha,Voltaje Shunt,Voltaje Bus,Voltaje total,Corriente,Potencia,Memoria Libre, Memoria Usada,Memoria Total\n")
+    a.write("N° medida;Fecha;Voltaje Shunt;Voltaje Bus;Voltaje total;Corriente;Potencia;Memoria Libre; Memoria Usada;Memoria Total\n")
     try:
         for i in range(NUM_MUESTRAS):
             fechaHora =  time.strftime("%c")
@@ -49,7 +49,7 @@ def mideEnergiaRAM():
             memoriaLibre=str(memoria.libre)
             memoriaUsada=str(memoria.usada)
             memoriaTotal=str(memoria.total)
-            textoArchivo= contador+','+fecha+','+voltajeShunt+','+voltajeBus+','+voltajeTotal+','+corriente+','+potencia+','+memoriaLibre+','+memoriaUsada+','+memoriaTotal\n'
+            textoArchivo= contador+';'+fecha+';'+voltajeShunt+';'+voltajeBus+';'+voltajeTotal+';'+corriente+';'+potencia+';'+memoriaLibre+';'+memoriaUsada+';'+memoriaTotal\n'
             a.write(textoArchivo)
             time.sleep(DELAY)
     except DeviceRangeError as e:
