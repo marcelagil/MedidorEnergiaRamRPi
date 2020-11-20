@@ -40,7 +40,7 @@ def mideEnergiaRAM():
     a.write("N° medida;Fecha;Voltaje Shunt;Voltaje Bus;Voltaje total;Corriente;Potencia;Memoria Libre; Memoria Usada;Memoria Total\n")
     try:
         for i in range(NUM_MUESTRAS):
-            fechaHora =  str(time.strftime("%c"))
+            fechaHora =  datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
             print("Bus Current: %.3f mA" % ina.current())
             print("Power: %.3f mW" % ina.power())
             print("Shunt voltage: %.3f mV" % ina.shunt_voltage())
