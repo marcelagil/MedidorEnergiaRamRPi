@@ -3,11 +3,14 @@ from ina219 import INA219
 from ina219 import DeviceRangeError
 from datetime import datetime
 import time
-
+import os
+from subprocess import Popen, PIPE
+from signal import SIGTERM
 
 MAX_EXPECTED_AMPS = 0.2
 SHUNT_OHMS = 0.1
 nombreArchivo  = "resultados"
+nombreProceso="node"
 DELAY=0.2
 #DELAY=0.002
 NUM_MUESTRAS=int(12*60/0.2)
@@ -57,13 +60,26 @@ def mideEnergiaRAM():
             memoriaLibre=str(memoria['libre'])
             memoriaUsada=str(memoria['usada'])
             memoriaTotal=str(memoria['total'])
-            textoArchivo= contador+';'+fechaHora+';'+voltajeShunt+';'+voltajeBus+';'+voltajeTotal+';'+corriente+';'+potencia+';'+memoriaLibre+';'+memoriaUsada+';'+memoriaTotal+'\n'
+            activo=detectaProcesoActivo(nombreProceso)
+            textoArchivo= contador+';'+fechaHora+';'+voltajeShunt+';'+voltajeBus+';'+voltajeTotal+';'+corriente+';'+potencia+';'+memoriaLibre+';'+memoriaUsada+';'+memoriaTotal+';'+activo+'\n'
             a.write(textoArchivo)
             time.sleep(DELAY)
     except DeviceRangeError as e:
         # Current out of device range with specified shunt resistor
         print(e)
     a.close()
+
+def detectaProcesoActivo (nombre):
+    ps= Popen(["ps", "-e"], stdout=PIPE)
+    grep = Popen(["grep", nombre], stdin=ps.stdout, stdout=PIPE)
+    ps.stdout.close()
+    data = grep.stdout.read().decode()
+    if data:
+        print("Proceso activo con nombre: "+ nombre)
+        return "Activo"
+    else:
+        print("El proceso no està activo")
+        return "No Activo"
 
 if __name__ == "__main__":
     mideEnergiaRAM()
