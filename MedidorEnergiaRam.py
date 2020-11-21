@@ -40,7 +40,7 @@ def mideEnergiaRAM():
     archivoResultados=nombreArchivo+fechaIncial+horaInicial+".csv"
     print("Bus Voltage: %.3f V" % ina.voltage())
     a = open (archivoResultados,'a')
-    a.write("N° medida;Fecha;Voltaje Shunt;Voltaje Bus;Voltaje total;Corriente;Potencia;Memoria Libre; Memoria Usada;Memoria Total\n")
+    a.write("N° medida;Fecha;Voltaje Shunt;Voltaje Bus;Voltaje total;Corriente;Potencia;Memoria Libre; Memoria Usada;Memoria Total;Proceso Node\n")
     try:
         for i in range(NUM_MUESTRAS):
             fechaHora =  datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
