@@ -13,7 +13,7 @@ nombreArchivo  = "resultados"
 nombreProceso="node"
 DELAY=0.2
 #DELAY=0.002
-NUM_MUESTRAS=int(12*60/0.2)
+NUM_MUESTRAS=int(12*60/MAX_EXPECTED_AMPS)
 
 def calculoMemoria():
     """
