@@ -7,13 +7,13 @@ import os
 from subprocess import Popen, PIPE
 from signal import SIGTERM
 
-MAX_EXPECTED_AMPS = 0.2
+MAX_EXPECTED_AMPS = 2
 SHUNT_OHMS = 0.1
-nombreArchivo  = "resultados"
+nombreArchivo  = "/home/pi/Desktop/MedidorEnergiaRamRPi/resultados"
 nombreProceso="node"
 DELAY=0.2
 #DELAY=0.002
-NUM_MUESTRAS=int(12*60/MAX_EXPECTED_AMPS)
+NUM_MUESTRAS=int(10.5*60/DELAY)
 
 def calculoMemoria():
     """
@@ -33,36 +33,30 @@ def calculoMemoria():
     return ret
 
 def mideEnergiaRAM():
-    ina = INA219(SHUNT_OHMS)
-    ina.configure(ina.RANGE_16V)
     fechaIncial= time.strftime("%d-%m_")
     horaInicial=time.strftime("%H_%M_%S")
     archivoResultados=nombreArchivo+fechaIncial+horaInicial+".csv"
-    print("Bus Voltage: %.3f V" % ina.voltage())
+    print(archivoResultados)
     a = open (archivoResultados,'a')
     a.write("N° medida;Fecha;Voltaje Shunt;Voltaje Bus;Voltaje total;Corriente;Potencia;Memoria Libre; Memoria Usada;Memoria Total;Proceso Node\n")
     try:
         for i in range(NUM_MUESTRAS):
             fechaHora =  datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
-            print("Bus Current: %.3f mA" % ina.current())
-            print("Power: %.3f mW" % ina.power())
-            print("Shunt voltage: %.3f mV" % ina.shunt_voltage())
-            print("Voltaje : %.3f V " % ina.voltage())
-            print("Voltaje : %.3f V " % ina.supply_voltage())
-            voltajeShunt=str(ina.shunt_voltage())
-            voltajeBus=str(ina.voltage())
-            voltajeTotal=str(ina.supply_voltage())
-            corriente=str(ina.current())
-            potencia=str(ina.power())
+            voltajeShunt="h"
+            voltajeBus="h"
+            voltajeTotal="h"
+            corriente="h"
+            potencia="h"
             contador=str(i+1)
             memoria=calculoMemoria()
-            print(memoria)
             memoriaLibre=str(memoria['libre'])
             memoriaUsada=str(memoria['usada'])
             memoriaTotal=str(memoria['total'])
             activo=detectaProcesoActivo(nombreProceso)
             textoArchivo= contador+';'+fechaHora+';'+voltajeShunt+';'+voltajeBus+';'+voltajeTotal+';'+corriente+';'+potencia+';'+memoriaLibre+';'+memoriaUsada+';'+memoriaTotal+';'+activo+'\n'
             a.write(textoArchivo)
+            print(memoria)
+            print(textoArchivo)
             time.sleep(DELAY)
     except DeviceRangeError as e:
         # Current out of device range with specified shunt resistor
